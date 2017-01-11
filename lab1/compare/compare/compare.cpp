@@ -5,31 +5,36 @@
 #include <iostream> 
 #include <string> 
 #include <fstream> 
+#include <Windows.h>
 
 using namespace std;
 
-bool CompareFiles(ifstream & file1, ifstream & file2, int & numberStr)
+bool CompareFiles(ifstream & file1, ifstream & file2, int & LineNumber)
 {
-	string s1, s2;
+	string lineFile1, lineFile2;
 
 	while (!file1.eof() || !file2.eof())
 	{
-		getline(file1, s1);
-		getline(file2, s2);
-		numberStr++;
-		if (s1 != s2)
+		getline(file1, lineFile1);
+		getline(file2, lineFile2);
+
+		LineNumber++;
+		if (lineFile1 != lineFile2)
 			return false;
 	}
 	return true;
 }
 
-
 int main(int argc, char* argv[])
 {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	setlocale(LC_ALL, "Russian");
+
 	if (argc != 3)
 	{
 		cout << "Invalid arguments count\n"
-			<< "Usage: Compare.exe <input file> <input file>\n";
+			<< "Usage: compare.exe <input file> <input file>\n";
 		return 1;
 	}
 
@@ -37,9 +42,10 @@ int main(int argc, char* argv[])
 
 	if (!file1.is_open())
 	{
-		cout << argv[1] << " not found" << endl;
+		cout << argv[1] << " not found." << endl;
 		return 1;
 	}
+
 
 	if (!file2.is_open())
 	{
@@ -47,78 +53,18 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	int numberStr = 0;
+	int LineNumber = 0;
 
-	if (!CompareFiles(file1, file2, numberStr))
+	if (!CompareFiles(file1, file2, LineNumber))
 	{
-		cout << "File is different. Line number is " << numberStr << endl;
+		cout << "File is different. Line number is " << LineNumber << endl;
 		return 1;
 	}
+
 	cout << "Files are equal" << endl;
 	return 0;
 }
 
 
-/*#include <iostream>
-#include <fstream>
 
-using namespace std;
-
-int main(int argc, char * argv[])
-{
-	if (argc != 3)
-	{
-		cout << "Invalid arguments count\n"
-			<< "Usage: copyfile.exe <input file> <output file>\n";
-		return 1;
-	}
-
-	// Объявили переменную типа ifstream 
-	// (input file stream, поток для чтения из файла), проинициализировав его
-	// именем входного файла
-	ifstream input(argv[1]);
-
-	// вызываем метод is_open() у объекта input,
-	// который вернет true, если файл был открыт
-	if (!input.is_open())
-	{
-		cout << "Failed to open " << argv[1] << " for reading\n";
-		return 1;
-	}
-
-	// создали поток для записи в выходной файл
-	ofstream output(argv[2]);
-	if (!output.is_open())
-	{
-		cout << "Failed to open " << argv[2] << " for writing\n";
-		return 1;
-	}
-
-	char ch;
-	// Считываем в переменную ch символ из входного потока
-	// возвращаем значение, приводимое к bool, которое сигнализирует об успехе
-	while (input.get(ch))
-	{
-		if (!output.put(ch))
-		{
-			cout << "Failed to save data on disk\n";
-			return 1;
-		}
-	}
-
-	if (!output.flush()) // Если не удалось сбросить данные на диск
-	{
-		cout << "Failed to save data on disk\n";
-		return 1;
-	}
-
-	return 0;
-}*/
-
-
-
-/*int _tmain(int argc, _TCHAR* argv[])
-{
-	return 0;
-}*/
-
+	
