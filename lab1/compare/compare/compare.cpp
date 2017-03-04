@@ -9,7 +9,7 @@
 
 using namespace std;
 
-bool CompareFiles(ifstream & file1, ifstream & file2, int & LineNumber)
+bool CompareFiles(ifstream & file1, ifstream & file2, int & lineNumber)
 {
 	string lineFile1, lineFile2;
 
@@ -18,20 +18,27 @@ bool CompareFiles(ifstream & file1, ifstream & file2, int & LineNumber)
 		getline(file1, lineFile1);
 		getline(file2, lineFile2);
 
-		LineNumber++;
+		++lineNumber;
 		if (lineFile1 != lineFile2)
+		{
 			return false;
+		}
 	}
 	return true;
 }
 
-int main(int argc, char* argv[])
+void Encoding()
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	setlocale(LC_ALL, "Russian");
+}
 
-	if (argc != 3)
+int main(int argc, char* argv[])
+{
+	Encoding();
+	const int validArgNum = 3;
+	if (argc != validArgNum)
 	{
 		cout << "Invalid arguments count\n"
 			<< "Usage: compare.exe <input file> <input file>\n";
@@ -46,18 +53,17 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-
 	if (!file2.is_open())
 	{
 		cout << argv[2] << " not found." << endl;
 		return 1;
 	}
 
-	int LineNumber = 0;
+	int lineNumber = 0;
 
-	if (!CompareFiles(file1, file2, LineNumber))
+	if (!CompareFiles(file1, file2, lineNumber))
 	{
-		cout << "File is different. Line number is " << LineNumber << endl;
+		cout << "File is different. Line number is " << lineNumber << endl;
 		return 1;
 	}
 
